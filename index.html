@@ -5,56 +5,81 @@
   <meta charset="UTF-8">
   <meta name="viewport"
         content="width=device-width, initial-scale=1.0">
+
   <title>DNA Enhancer Simulator</title>
+
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
   <header>
     <h1>DNA Enhancer Simulator</h1>
-    <p>원거리 조절부위의 접촉 성공률 분석</p>
+    <p>
+      원거리 조절부위의 접촉 확률 및
+      DNA 루핑 시뮬레이션
+    </p>
   </header>
 
   <main>
+
+    <!-- DNA 애니메이션 -->
     <section>
-      <h2>DNA 접힘 시뮬레이션</h2>
+      <h2>DNA 3차원 구조 모형</h2>
 
       <canvas
         id="dnaCanvas"
         width="900"
-        height="400">
+        height="400"
+        style="max-width:100%; height:auto;">
       </canvas>
 
       <p id="status">시뮬레이션 대기 중</p>
     </section>
 
+    <!-- 실험 변인 -->
     <section>
       <h2>실험 변인 설정</h2>
 
-      <label for="force">상호작용 세기</label>
+      <label for="force">
+        상호작용 세기
+      </label>
+
       <input
         type="range"
         id="force"
         min="0"
         max="100"
+        step="1"
         value="50">
+
       <span id="forceValue">50</span>
 
-      <label for="distance">DNA상 거리</label>
+      <label for="distance">
+        DNA상 거리
+      </label>
+
       <input
         type="range"
         id="distance"
-        min="10"
+        min="0"
         max="100"
+        step="1"
         value="50">
+
       <span id="distanceValue">50</span>
 
-      <label for="flexibility">DNA 유연성</label>
+      <label for="flexibility">
+        DNA 유연성
+      </label>
+
       <input
         type="range"
         id="flexibility"
         min="0"
         max="100"
+        step="1"
         value="50">
+
       <span id="flexibilityValue">50</span>
 
       <button id="runBtn">
@@ -62,11 +87,12 @@
       </button>
     </section>
 
+    <!-- 개별 실험 결과 -->
     <section>
       <h2>실험 결과</h2>
 
       <p>
-        반복 실험 횟수:
+        전체 시행 횟수:
         <strong id="trialCount">2,000회</strong>
       </p>
 
@@ -81,25 +107,62 @@
       </p>
 
       <button id="downloadBtn">
-        결과 CSV 저장
+        실험 결과 CSV 저장
       </button>
     </section>
 
+    <!-- 세 변인 비교 그래프 -->
     <section>
-      <h2>실험 모델 안내</h2>
+      <h2>변인별 접촉 확률 비교</h2>
+
       <p>
-        본 프로그램은 DNA의 접힘과
-        인핸서-프로모터 접촉을 단순화한
-        교육용 확률 시뮬레이션입니다.
+        각 변인을 0부터 100까지 변화시키며
+        나머지 두 변인은 50으로 고정합니다.
       </p>
+
+      <button id="graphBtn">
+        3개 변인 그래프 생성
+      </button>
+
+      <canvas
+        id="resultGraph"
+        width="900"
+        height="440"
+        style="max-width:100%; height:auto;">
+      </canvas>
+
+      <p id="graphStatus">
+        그래프 생성 대기 중
+      </p>
+
+      <button id="graphDownloadBtn">
+        그래프 데이터 CSV 저장
+      </button>
+    </section>
+
+    <!-- 모델 안내 -->
+    <section>
+      <h2>시뮬레이션 모델 안내</h2>
+
       <p>
-        상호작용 세기, DNA상 거리, 유연성은
-        실제 측정된 물리량이 아닌
-        모형상의 상대적인 변수입니다.
-        계산된 접촉 확률은 실제 생물학적
-        결합 확률을 의미하지 않습니다.
+        본 프로그램은 인핸서와 프로모터의
+        접촉 과정을 단순화한 교육용
+        확률 시뮬레이션입니다.
+      </p>
+
+      <p>
+        DNA의 접힘 정도는 상호작용 세기,
+        DNA 유연성 및 무작위 변동을 이용해
+        계산합니다.
+      </p>
+
+      <p>
+        계산된 접촉 확률은 실제 세포에서
+        측정된 값이 아니며, 각 변수는
+        모형상의 상대적인 설정값입니다.
       </p>
     </section>
+
   </main>
 
   <script src="script.js"></script>
