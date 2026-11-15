@@ -10,82 +10,92 @@
   <link rel="stylesheet" href="style.css">
 
   <style>
+    body {
+      font-family: system-ui, sans-serif;
+      color: #243044;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
     canvas {
       display: block;
-      max-width: 100%;
-      height: auto;
-    }
-
-    .variable-control {
-      margin-bottom: 22px;
-    }
-
-    .variable-control label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-    }
-
-    .variable-control input {
       width: 100%;
-      accent-color: #377bc5;
+      max-width: 900px;
+      height: auto;
+      background: white;
+      border: 1px solid #e0e6ed;
+      border-radius: 8px;
     }
 
-    .variable-control output {
-      display: inline-block;
-      margin-top: 5px;
-      font-weight: 600;
-    }
-
-    .graph-legend {
-      display: flex;
-      flex-wrap: wrap;
+    .controls {
+      display: grid;
       gap: 18px;
-      margin-top: 12px;
-      font-size: 14px;
+      margin-bottom: 20px;
     }
 
-    .legend-item {
+    .control label {
       display: flex;
-      align-items: center;
-      gap: 7px;
+      justify-content: space-between;
+      font-weight: 600;
+      margin-bottom: 7px;
     }
 
-    .legend-color {
-      display: inline-block;
-      width: 20px;
-      height: 4px;
-      border-radius: 3px;
+    .control input {
+      width: 100%;
+      display: block;
+      cursor: pointer;
     }
 
-    .graph-note {
-      font-size: 13px;
-      color: #64748b;
+    .note {
+      color: #5c697a;
+      font-size: 0.91rem;
       line-height: 1.6;
     }
 
-    .result-value {
-      font-size: 22px;
-      font-weight: 700;
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 22px;
+      margin-top: 15px;
+    }
+
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+    }
+
+    .swatch {
+      width: 13px;
+      height: 13px;
+      display: inline-block;
+      border-radius: 50%;
+    }
+
+    .legend b, .result {
+      font-variant-numeric: tabular-nums;
+    }
+
+    button {
+      cursor: pointer;
     }
   </style>
 </head>
 
 <body>
-
   <header>
     <h1>DNA Enhancer Simulator</h1>
-    <p>
-      원거리 조절부위의 접촉 확률 및
-      DNA 루핑 시뮬레이션
-    </p>
+    <p>인핸서–프로모터 접촉과 DNA 루핑 모형</p>
   </header>
 
   <main>
 
-    <!-- DNA 구조 시뮬레이션 -->
     <section>
-      <h2>DNA 루핑 시뮬레이션</h2>
+      <h2>DNA 접힘 시뮬레이션</h2>
 
       <canvas
         id="dnaCanvas"
@@ -93,160 +103,144 @@
         height="400">
       </canvas>
 
-      <p id="status">
-        시뮬레이션 대기 중
-      </p>
+      <p id="status">시뮬레이션 대기 중</p>
     </section>
 
-    <!-- 변수 설정 -->
     <section>
       <h2>실험 변인 설정</h2>
 
-      <div class="variable-control">
-        <label for="force">
-          상호작용 세기
-        </label>
+      <div class="controls">
 
-        <input
-          type="range"
-          id="force"
-          min="0"
-          max="100"
-          step="1"
-          value="50">
+        <div class="control">
+          <label for="force">
+            상호작용 세기
+            <output id="forceValue">50</output>
+          </label>
 
-        <output id="forceValue">50</output>
-      </div>
+          <input
+            type="range"
+            id="force"
+            min="0"
+            max="100"
+            step="1"
+            value="50">
+        </div>
 
-      <div class="variable-control">
-        <label for="distance">
-          DNA상 거리
-        </label>
+        <div class="control">
+          <label for="flexibility">
+            DNA 유연성
+            <output id="flexibilityValue">50</output>
+          </label>
 
-        <input
-          type="range"
-          id="distance"
-          min="0"
-          max="100"
-          step="1"
-          value="50">
+          <input
+            type="range"
+            id="flexibility"
+            min="0"
+            max="100"
+            step="1"
+            value="50">
+        </div>
 
-        <output id="distanceValue">50</output>
-      </div>
+        <div class="control">
+          <label for="distance">
+            DNA상 거리
+            <output id="distanceValue">50</output>
+          </label>
 
-      <div class="variable-control">
-        <label for="flexibility">
-          DNA 유연성
-        </label>
+          <input
+            type="range"
+            id="distance"
+            min="0"
+            max="100"
+            step="1"
+            value="50">
+        </div>
 
-        <input
-          type="range"
-          id="flexibility"
-          min="0"
-          max="100"
-          step="1"
-          value="50">
-
-        <output id="flexibilityValue">50</output>
       </div>
 
       <button id="runBtn">
-        시뮬레이션 실행
+        2,000회 시뮬레이션 실행
       </button>
     </section>
 
-    <!-- 고정 그래프 -->
     <section>
-      <h2>변인별 접촉 확률 비교 그래프</h2>
+      <h2>세 변인에 따른 접촉 확률의 추세</h2>
 
-      <p>
-        곡선은 고정되어 있으며,
-        각 점은 위의 슬라이더 설정값에 따라 이동합니다.
+      <p class="note">
+        각 곡선은 해당 변인만 0~100으로 변경하고,
+        나머지 두 변인은 50으로 고정해 계산한
+        모형의 예상 접촉 확률입니다.
+        곡선은 고정되고 점은 슬라이더를 따라 이동합니다.
       </p>
 
       <canvas
         id="resultGraph"
         width="900"
-        height="440">
+        height="450">
       </canvas>
 
-      <div class="graph-legend">
-        <div class="legend-item">
-          <span
-            class="legend-color"
-            style="background:#377bc5">
-          </span>
+      <div class="legend">
+        <span>
+          <i class="swatch"
+             style="background:#3478bd"></i>
           상호작용 세기
-        </div>
+          <b id="forceGraphValue">—</b>
+        </span>
 
-        <div class="legend-item">
-          <span
-            class="legend-color"
-            style="background:#238463">
-          </span>
+        <span>
+          <i class="swatch"
+             style="background:#238463"></i>
           DNA 유연성
-        </div>
+          <b id="flexibilityGraphValue">—</b>
+        </span>
 
-        <div class="legend-item">
-          <span
-            class="legend-color"
-            style="background:#dc9245">
-          </span>
+        <span>
+          <i class="swatch"
+             style="background:#d58a32"></i>
           DNA상 거리
-        </div>
+          <b id="distanceGraphValue">—</b>
+        </span>
       </div>
 
-      <p id="graphStatus" class="graph-note">
-        고정 예시 그래프 — 실험 측정값이 아닙니다.
+      <p class="note" id="graphStatus">
+        그래프는 교육용 모형의 예측값이며
+        논문의 실측값이 아닙니다.
       </p>
     </section>
 
-    <!-- 시뮬레이션 결과 -->
     <section>
       <h2>시뮬레이션 결과</h2>
 
-      <p>
-        전체 시행 횟수:
+      <p class="result">
+        전체 시행:
         <strong id="trialCount">2,000회</strong>
       </p>
 
-      <p>
-        접촉 성공 횟수:
-        <strong id="successCount">-</strong>
+      <p class="result">
+        접촉 성공:
+        <strong id="successCount">—</strong>
       </p>
 
-      <p>
-        표적 접촉 확률:
-        <strong
-          id="targetResult"
-          class="result-value">-</strong>
+      <p class="result">
+        접촉 확률:
+        <strong id="targetResult">—</strong>
       </p>
 
       <button id="downloadBtn">
-        실험 결과 CSV 저장
+        시행 결과 CSV 저장
       </button>
     </section>
 
-    <!-- 모델 설명 -->
     <section>
-      <h2>시뮬레이션 모델 안내</h2>
+      <h2>모형의 한계</h2>
 
-      <p>
-        본 프로그램은 DNA의 접힘과
-        인핸서-프로모터 접촉을 단순화한
-        교육용 확률 모델입니다.
-      </p>
-
-      <p>
-        그래프의 곡선은 변인들의 영향을
-        설명하기 위해 설정한 고정 예시이며,
-        실제 DNA에서 측정한 접촉 확률이 아닙니다.
-      </p>
-
-      <p>
-        시뮬레이션 실행 결과는
-        별도의 확률적 모형에서
-        2,000회 반복 시행하여 계산합니다.
+      <p class="note">
+        이 프로그램은 2차원 U자 접힘과 확률적
+        변동을 단순화한 모형입니다.
+        세 변인은 실제 측정 단위가 아닌
+        0~100의 상대 설정값입니다.
+        접촉이 반드시 유전자 전사 활성화를
+        의미하지는 않습니다.
       </p>
     </section>
 
